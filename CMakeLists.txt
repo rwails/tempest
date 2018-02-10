@@ -13,3 +13,4 @@ SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 add_subdirectory(pfi/)
 add_subdirectory(path_inference/)
+add_subdirectory(user_behavior/dovetail/)
