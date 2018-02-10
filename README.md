@@ -20,10 +20,12 @@ Linux and Mac OSX are supported.
 
 To build this code, you will need to first install
 
-+ [CMake, minimum version 3.0.0](https://cmake.org/)
++ A C++11-capable compiler, e.g. [g++](https://gcc.gnu.org/) or
+  [clang](https://clang.llvm.org/)
 + [GNU Make](https://www.gnu.org/software/make/)
-+ A C++11-capable compiler, e.g. [g++](https://gcc.gnu.org/)
++ [CMake, minimum version 3.0.0](https://cmake.org/)
 + [The GNU Multiple Precision Arithmetic Library](https://gmplib.org/)
++ [GNU Scientific Library](https://www.gnu.org/software/gsl/)
 + [Intel® TBB Library](https://www.threadingbuildingblocks.org/)
 + [Python3](https://www.python.org/)
 + [virtualenv](https://virtualenv.pypa.io/en/stable/)
@@ -51,6 +53,8 @@ source env/bin/activate
 ```bash
 git submodule init && git submodule update
 cd pytricia && python3 setup.py build && python3 setup.py install && cd ..
+pip install -r requirements.txt
+python3 setup.py build && python3 setup.py install
 ```
 
 ## Acknowledgements ##
