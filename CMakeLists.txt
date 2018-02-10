@@ -12,3 +12,4 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -march=native -ggdb")
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 add_subdirectory(pfi/)
+add_subdirectory(path_inference/)
