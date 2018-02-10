@@ -1,3 +1,6 @@
 .DS_Store
 build/*
 install/*
+env/*
+dist/*
+tempest.egg-info/*

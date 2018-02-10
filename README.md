@@ -44,7 +44,7 @@ make && make install
 2. Setup and source a Python virtualenv
 ```bash
 virtualenv -p python3 env
-source env
+source env/bin/activate
 ```
 
 3. Install Python packages

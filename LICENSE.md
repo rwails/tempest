@@ -1,6 +1,10 @@
-This project utilizes the following code, not written by the authors:
+This repository contains code from the following external projects:
 
-+ [SpookyHash by Bob Jenkins, public domain](http://www.burtleburtle.net/bob/hash/spooky.html).
++ [SpookyHash by Bob Jenkins](http://www.burtleburtle.net/bob/hash/spooky.html)
++ [The Tor Path Simulator](https://github.com/torps/torps)
+
+These external projects provide their own licensing terms; as such, the code
+from these projects is not covered under the following license.
 
 ---
 
