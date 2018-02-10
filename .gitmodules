@@ -1,0 +1,3 @@
+[submodule "pytricia"]
+	path = pytricia
+	url = https://github.com/jsommers/pytricia
