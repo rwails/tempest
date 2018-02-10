@@ -1,24 +1,39 @@
 #!/usr/bin/env python3
 
 import argparse
+import ipaddress
+import logging
+import sys
 
-import nrl_princeton.tor.entropy_analysis as entropy_analysis
-import nrl_princeton.tor.denasa as denasa
+import tempest.pfi
+from tempest import ip_to_asn
+from tempest.tor import denasa
+from tempest.tor import entropy_analysis
 
 def main(args):
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
-    clients = read_client_file(args.client_filename)
+    client_ases = read_clique_file(args.clique_filename)
+
+    pfi = tempest.pfi.PFI(args.libspookyhash_path,
+                          args.path_filename,
+                          args.index_filename)
+
+    pfi.load()
+    pfi.verify()
+
+    pfx_tree = ip_to_asn.prefix_tree_from_pfx2as_file(args.pfx2as_filename)
 
     client_guard_selection_probs =\
         denasa.compute_denasa_guard_selection_probs(
-            clients,
-            args.network_state_filename,
-            args.prefix2as_filename,
-            args.libpfi_path)
+            client_ases,
+            args.nsf_filename,
+            pfx_tree,
+            pfi)
 
-    guard_fps = sorted(client_guard_selection_probs[clients[0]].keys())
+    guard_fps = sorted(client_guard_selection_probs[client_ases[0]].keys())
 
-    prob_matrix = entropy_analysis.make_prob_matrix(clients, guard_fps,
+    prob_matrix = entropy_analysis.make_prob_matrix(client_ases, guard_fps,
                                                     client_guard_selection_probs)
 
     dissim_scores = entropy_analysis.score_clients_by_dissim(prob_matrix)
@@ -26,29 +41,29 @@ def main(args):
 
     print("* DISSIMILARITY *")
     for idx, score in dissim_scores:
-        print(clients[idx], score)
+        print(client_ases[idx], score)
 
     entropy_scores = entropy_analysis.score_clients_by_entropy(prob_matrix)
     entropy_scores = sorted(entropy_scores, key=lambda x: x[1], reverse=False)
 
     print("* ENTROPY *")
     for idx, score in entropy_scores:
-        print(clients[idx], score)
+        print(client_ases[idx], score)
+
+    pfi.close()
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--network_state_filename",
-                        default="../data/2015-10-fat")
-    parser.add_argument("--prefix2as_filename",
-                        default="../data/routeviews-rv2-20151001-0800.pfx2as")
-    parser.add_argument("--libpfi_path",
-                        default="/home/rwails/prg/nrl-topology/py_allpairs/libpfi/libpfi.so")
-    parser.add_argument("--client_filename",
-                        default="../data/client_pool.txt")
+    parser.add_argument("nsf_filename")
+    parser.add_argument("pfx2as_filename")
+    parser.add_argument("libspookyhash_path")
+    parser.add_argument("path_filename")
+    parser.add_argument("index_filename")
+    parser.add_argument("clique_filename")
     return parser.parse_args()
 
-def read_client_file(client_filename):
-    return [line.strip() for line in open(client_filename, 'r')]
+def read_clique_file(clique_filename):
+    return [line.strip() for line in open(clique_filename, 'r')]
 
 if __name__ == "__main__":
     main(parse_args())

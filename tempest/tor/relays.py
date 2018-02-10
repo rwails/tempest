@@ -52,7 +52,7 @@ import re
 from stem import Flag
 import stem.descriptor
 
-from .. import ip_to_asn, util
+from .. import util
 
 DEFAULT_BWWEIGHTSCALE = 10000
 
@@ -132,20 +132,18 @@ def get_guards(cons_rel_stats, descriptors):
 
     return guards
 
-def make_relay_fp_to_asns_dict(relay_fp_to_ip, first_octet_to_network_asns):
+def make_relay_fp_to_asns_dict(relay_fp_to_ip, pfx_tree):
     """
     Keyword Arguments:
         relay_fp_to_ip -- Dict mapping relay fingerprint to IP address, produced
         by get_guards()
 
-        first_octet_to_network_asns -- Created by ip_to_asn.parse_pfx2as_file
+        pfx_tree -- Dict mapping IP address to ASN
     """
     relay_fp_to_asns = dict()
 
     for relay_fp, relay_ip in relay_fp_to_ip.items():
-        relay_fp_to_asns[relay_fp] =\
-            ip_to_asn.ip_to_asns(ipaddress.IPv4Address(relay_ip),
-                                 first_octet_to_network_asns)
+        relay_fp_to_asns[relay_fp] = pfx_tree[relay_ip]
 
     return relay_fp_to_asns
 

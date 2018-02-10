@@ -1,18 +1,8 @@
-# -*- coding: utf-8 -*-
-################################################################################
-# MODULE: denasa.py
-# AUTHOR: Ryan Wails
-# EMAIL:  ryan.wails.ctr@nrl.navy.mil
-# DATE:   2017-01-06
-################################################################################
+#!/usr/bin/env python3
 
 from collections import defaultdict
 import functools
 import sys
-
-# Need to add py_allpairs directory to path until we create a setuptools package
-sys.path.append("/home/rwails/prg/nrl-topology/")
-import py_allpairs.as_path_file_interface_smem as pfi_smem
 
 from .. import ip_to_asn
 from . import relays
@@ -29,22 +19,18 @@ def bidirectional_lookup(asn_1, asn_2, pfi):
     ases_forward_path = pfi.get_path(asn_1, asn_2)
     ases_reverse_path = pfi.get_path(asn_2, asn_1)
 
-    if ases_forward_path == ['None']:
-        ases_forward_path = None
-    else:
+    if ases_forward_path is not None:
         ases_forward_path = set(ases_forward_path)
 
-    if ases_reverse_path == ['None']:
-        ases_reverse_path = None
-    else:
+    if ases_reverse_path is not None:
         ases_reverse_path = set(ases_reverse_path)
 
     return union_of_non_none_sets([ases_forward_path, ases_reverse_path])
 
 def compute_denasa_guard_selection_probs(client_asns,
                                          network_state_filename,
-                                         prefix2as_filename,
-                                         libpfi_path):
+                                         pfx_tree,
+                                         pfi):
     """
     Returns a dict mapping each client to its DeNASA guard selection probability
     distribution.
@@ -55,12 +41,8 @@ def compute_denasa_guard_selection_probs(client_asns,
     guard_fp_to_ip = relays.get_guards(network_state_vars[0],
                                        network_state_vars[1])
 
-    first_octet_to_network_asns =\
-            ip_to_asn.parse_pfx2as_file(prefix2as_filename)
-
     guard_fp_to_asns =\
-            relays.make_relay_fp_to_asns_dict(guard_fp_to_ip,
-                                              first_octet_to_network_asns)
+            relays.make_relay_fp_to_asns_dict(guard_fp_to_ip, pfx_tree)
 
     guard_fps = []
     for guard_fp, asns in guard_fp_to_asns.items():
@@ -73,12 +55,8 @@ def compute_denasa_guard_selection_probs(client_asns,
                                                         network_state_vars[4],
                                                         network_state_vars[5])
 
-    pfi = pfi_smem.ASPathFileInterfaceSMem(libpfi_path, b'/pf_string_block',
-                                           b'/pf_table_block')
-    pfi.load()
     usability_table = make_client_guard_usability_table(client_asns, guard_fps,
                                                         guard_fp_to_asns, pfi)
-    pfi.close()
 
     client_guard_selection_probs = dict()
     for client_asn in client_asns:
