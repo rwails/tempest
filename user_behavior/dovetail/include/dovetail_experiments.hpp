@@ -18,6 +18,7 @@ namespace nrl {
 template <typename T, typename URNG>
 ASNumber random_dovetail_path_no_tail(const ASRelIR &as_rel_ir,
                                       std::size_t num_matchmakers,
+                                      std::size_t graph_diameter,
                                       URNG &&g)
 {
    using Graph = T;
@@ -31,8 +32,6 @@ ASNumber random_dovetail_path_no_tail(const ASRelIR &as_rel_ir,
    generate_transpose_graph(graph, &transpose_graph);
    transpose_graph.sort_edge_lists();
 
-   auto diameter = graph_diameter(graph);
-
    typename Graph::Path chosen_path;
 
    ASNumber source_asn;
@@ -44,8 +43,8 @@ ASNumber random_dovetail_path_no_tail(const ASRelIR &as_rel_ir,
    source_asn = single_random_sample(endhost_ases.cbegin(),
                                      endhost_ases.cend(), g);
 
-   nrl::create_path_to_random_matchmaker(graph, transpose_graph, diameter,
-         source_asn, properties, 20000, diameter * 3, &chosen_path, g);
+   nrl::create_path_to_random_matchmaker(graph, transpose_graph, graph_diameter,
+         source_asn, properties, 20000, graph_diameter * 3, &chosen_path, g);
 
    if (chosen_path.empty()) {
       return ASNumber{};
@@ -66,6 +65,7 @@ template <typename T, typename URNG>
 bool multiple_connections_sample_no_tail(const ASRelIR &as_rel_ir,
                                          std::size_t num_matchmakers,
                                          std::size_t max_num_conn,
+                                         std::size_t graph_diameter,
                                          std::string &adversary_asn,
                                          int sample_num,
                                          URNG &&g)
@@ -83,8 +83,6 @@ bool multiple_connections_sample_no_tail(const ASRelIR &as_rel_ir,
    graph.sort_edge_lists();
    generate_transpose_graph(graph, &transpose_graph);
    transpose_graph.sort_edge_lists();
-
-   auto diameter = graph_diameter(graph);
 
    typename Graph::Path chosen_path;
 
@@ -105,9 +103,9 @@ bool multiple_connections_sample_no_tail(const ASRelIR &as_rel_ir,
       std::cout << adversary_asn << ',' << sample_num << ',' << i << ','
          << possible_ases.size() << std::endl;
 
-      create_path_to_random_matchmaker(graph, transpose_graph, diameter,
+      create_path_to_random_matchmaker(graph, transpose_graph, graph_diameter,
                                        source_asn, properties, 20000,
-                                       diameter * 3, &chosen_path, g);
+                                       graph_diameter * 3, &chosen_path, g);
 
       if (chosen_path.empty()) {
          return false; // Chose source vertex with no general Internet

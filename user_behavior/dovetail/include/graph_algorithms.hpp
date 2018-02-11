@@ -41,17 +41,6 @@ void generate_transpose_graph(const T& graph, T* transpose_graph)
 }
 
 template <typename T>
-typename T::Weight graph_diameter(const T& graph [[ gnu::unused ]]) {
-   // TODO (rwails): Implement Floyd-Warshall.  May be too expensive for our
-   // large graph to run online.  Stub for now.
-   //
-   // UPDATE (rwails): Computed Gao-Rexford allpairs inference on CAIDA's
-   // 2016-10 asrel2 dataset, longest shortest-path length was 22 for path
-   // 10091 -> 264924.  Still a stub function for now.
-   return 22;
-}
-
-template <typename T>
 void zero_nbhd(const T& graph,
                const std::set<typename T::Vertex> &source_vertices,
                std::set<typename T::Vertex> *nbhd)
