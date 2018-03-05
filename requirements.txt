@@ -1,3 +1,5 @@
 pycrypto==2.6.1
 stem==1.5.3
 numpy
+pandas
+ujson
