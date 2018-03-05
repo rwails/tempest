@@ -3,3 +3,6 @@ stem==1.5.3
 numpy
 pandas
 ujson
+bs4
+ripe.atlas.cousteau
+ripe.atlas.sagan
