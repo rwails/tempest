@@ -40,7 +40,10 @@ void print_path(const Path &path) {
    std::printf("%s\n", end_itr->c_str());
 }
 
-void path_to_str(const Path& path, std::size_t max_len, char *out) {
+void path_to_str(const Path& path,
+                 std::size_t max_len [[ gnu::unused ]],
+                 char *out)
+{
    std::size_t len = 0;
 
    auto add_hop_str = [&] (const char *hop_str, const char *format,

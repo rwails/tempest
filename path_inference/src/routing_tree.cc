@@ -26,6 +26,7 @@ static Relationship interpret_rel_indicator(const char *rel_indicator)
       return Relationship::kProvider;
    } else {
       assert(false);
+      return Relationship::kProvider;
    }
 }
 
