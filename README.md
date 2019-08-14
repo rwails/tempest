@@ -5,10 +5,9 @@ analyses found in
 
 **Tempest: Temporal Dynamics in Anonymity Systems**  
 Ryan Wails, Yixin Sun, Aaron Johnson, Mung Chiang, Prateek Mittal  
-Proceedings on Privacy Enhancing Technologies (PoPETs), 2018  
-<https://www.petsymposium.org/2018/paperlist.php>
+*18th Privacy Enhancing Technologies Symposium (PETS 2018)*
 
-Please contact `ryan dot wails @ nrl dot navy dot mil` with questions.
+Please contact `ryan <dot> wails @ nrl <dot> navy <dot> mil` with questions.
 
 ## Usage ##
 
